@@ -1,0 +1,35 @@
+{
+  "name": "react-geocoder",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@esri/arcgis-rest-geocoder": "^1.5.1",
+    "@esri/arcgis-rest-request": "^1.5.1",
+    "@turf/boolean-point-in-polygon": "^6.0.1",
+    "@turf/buffer": "^5.1.5",
+    "@turf/distance": "^6.0.1",
+    "@turf/helpers": "^6.1.4",
+    "@turf/invariant": "^6.1.2",
+    "@turf/points-within-polygon": "^5.1.5",
+    "debounce-fn": "^1.0.0",
+    "downshift": "^2.0.19",
+    "emotion": "^9.2.6",
+    "esri-loader": "^2.4.0",
+    "lodash.debounce": "^4.0.8",
+    "match-sorter": "^2.2.3",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-emotion": "^9.2.6",
+    "react-fast-compare": "^2.0.1",
+    "react-scripts": "1.1.4",
+    "semantic-ui-css": "^2.3.3",
+    "semantic-ui-react": "^0.82.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "homepage": "https://gis.baltimorecity.gov/bpd-inspections"
+}
