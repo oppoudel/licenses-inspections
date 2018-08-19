@@ -31,12 +31,12 @@ export default class Inspections extends Component {
     const polygon = buffer(point([x, y]), 0.1, {
       units: 'miles'
     });
-    const licensesInside = liquorLicenses
-      .filter(item => item.geometry)
-      .filter(feature => booleanPointInPolygon(feature, polygon));
-    const callsInside = callsForService
-      .filter(item => item.geometry)
-      .filter(feature => booleanPointInPolygon(feature, polygon));
+    const licensesInside = liquorLicenses.filter(feature =>
+      booleanPointInPolygon(feature, polygon)
+    );
+    const callsInside = callsForService.filter(feature =>
+      booleanPointInPolygon(feature, polygon)
+    );
     this.setState({
       licensesInside: licensesInside,
       callsInside: callsInside,
@@ -47,59 +47,55 @@ export default class Inspections extends Component {
   render() {
     const { callsInside, licensesInside, loading, activeIndex } = this.state;
     return (
-      <div>
-        {!loading && (
-          <Accordion fluid styled>
-            <Accordion.Title
-              active={activeIndex === 0}
-              index={0}
-              onClick={this.handleClick}
-            >
-              <Icon name="dropdown" />
-              CAD Calls
-            </Accordion.Title>
-            <Accordion.Content active={activeIndex === 0}>
-              <Grid stackable columns={2}>
-                {callsInside.map((call, i) => (
-                  <Grid.Column key={i}>
-                    <Segment>
-                      Description: {call.properties.description} <br />
-                      Location: {call.properties.incidentlocation} <br />
-                      Priority: {call.properties.priority} <br />
-                      Call Date: {getDate(call.properties.calldatetime)}
-                    </Segment>
-                  </Grid.Column>
-                ))}
-              </Grid>
-            </Accordion.Content>
-            <Accordion.Title
-              active={activeIndex === 1}
-              index={1}
-              onClick={this.handleClick}
-            >
-              <Icon name="dropdown" />
-              Liquor Licenses
-            </Accordion.Title>
-            <Accordion.Content active={activeIndex === 1}>
-              <Grid stackable columns={2}>
-                {licensesInside.map((license, i) => (
-                  <Grid.Column key={i}>
-                    <Segment>
-                      Trade Name: {license.properties.tradename} <br />
-                      License End Date:{' '}
-                      {getDate(license.properties.licenseenddate)} <br />
-                      Licenseee Name: {
-                        license.properties.licenseefirstname
-                      }{' '}
-                      {license.properties.licenseelastname}
-                    </Segment>
-                  </Grid.Column>
-                ))}
-              </Grid>
-            </Accordion.Content>
-          </Accordion>
-        )}
-      </div>
+      !loading && (
+        <Accordion fluid styled style={{ marginBottom: 20 }}>
+          <Accordion.Title
+            active={activeIndex === 0}
+            index={0}
+            onClick={this.handleClick}
+          >
+            <Icon name="dropdown" />
+            CAD Calls
+          </Accordion.Title>
+          <Accordion.Content active={activeIndex === 0}>
+            <Grid stackable columns={2}>
+              {callsInside.map(({ properties }, i) => (
+                <Grid.Column key={i}>
+                  <Segment>
+                    Description: {properties.description} <br />
+                    Location: {properties.incidentlocation} <br />
+                    Priority: {properties.priority} <br />
+                    Call Date: {getDate(properties.calldatetime)}
+                  </Segment>
+                </Grid.Column>
+              ))}
+            </Grid>
+          </Accordion.Content>
+          <Accordion.Title
+            active={activeIndex === 1}
+            index={1}
+            onClick={this.handleClick}
+          >
+            <Icon name="dropdown" />
+            Liquor Licenses
+          </Accordion.Title>
+          <Accordion.Content active={activeIndex === 1}>
+            <Grid stackable columns={2}>
+              {licensesInside.map(({ properties }, i) => (
+                <Grid.Column key={i}>
+                  <Segment>
+                    Trade Name: {properties.tradename} <br />
+                    License End Date: {getDate(properties.licenseenddate)}
+                    <br />
+                    Licenseee Name: {properties.licenseefirstname}{' '}
+                    {properties.licenseelastname}
+                  </Segment>
+                </Grid.Column>
+              ))}
+            </Grid>
+          </Accordion.Content>
+        </Accordion>
+      )
     );
   }
 }

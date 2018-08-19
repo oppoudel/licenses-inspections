@@ -70,9 +70,11 @@ export default class EsriMap extends Component {
         view = new MapView({
           map: webmap,
           container: this.viewdivRef.current,
-          zoom: 16,
+          zoom: 17,
           center: [x, y]
         });
+        // prevents panning with the mouse drag event
+        view.on('drag', e => e.stopPropagation());
         view.when(() => this.addPoint());
       }
     );
