@@ -35,7 +35,9 @@ export default class EsriMap extends Component {
   addPoint = () => {
     loadModules(['esri/Graphic', 'esri/layers/GraphicsLayer'], options).then(
       ([Graphic, GraphicsLayer]) => {
-        const { x, y } = this.props;
+        const {
+          center: { x, y }
+        } = this.props;
         if (webmap && view) {
           webmap.removeAll();
           const point = {
@@ -61,7 +63,9 @@ export default class EsriMap extends Component {
     );
   };
   createMap() {
-    const { x, y } = this.props;
+    const {
+      center: { x, y }
+    } = this.props;
     loadModules(['esri/views/MapView', 'esri/Map']).then(
       ([MapView, Map, Graphic, GraphicsLayer], options) => {
         webmap = new Map({

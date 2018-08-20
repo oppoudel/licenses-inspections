@@ -27,7 +27,11 @@ export default class Inspections extends Component {
     }
   }
   findLocations = () => {
-    const { liquorLicenses, callsForService, x, y } = this.props;
+    const {
+      liquorLicenses,
+      callsForService,
+      center: { x, y }
+    } = this.props;
     const polygon = buffer(point([x, y]), 0.1, {
       units: 'miles'
     });

@@ -10,8 +10,10 @@ import Inspections from './components/Inspections';
 
 class App extends Component {
   state = {
-    x: -76.6,
-    y: 39.3,
+    mapCenter: {
+      x: -76.6,
+      y: 39.3
+    },
     liquorLicenses: [],
     callsForService: [],
     error: null,
@@ -31,20 +33,19 @@ class App extends Component {
     });
   }
   onXYupdate = (x, y) => {
-    this.setState({ x, y });
+    this.setState({ mapCenter: { x, y } });
   };
   render() {
-    const { x, y, liquorLicenses, callsForService } = this.state;
+    const { mapCenter, liquorLicenses, callsForService } = this.state;
     return (
       <div>
         <LocationTracker updateXY={this.onXYupdate} />
         <TopMenu />
         <Container style={{ marginTop: '5em' }}>
           <Geocoder updateXY={this.onXYupdate} />
-          <EsriMap x={x} y={y} />
+          <EsriMap center={mapCenter} />
           <Inspections
-            x={x}
-            y={y}
+            center={mapCenter}
             liquorLicenses={liquorLicenses}
             callsForService={callsForService}
           />
