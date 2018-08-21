@@ -13,10 +13,23 @@ export const geoQueries = [
   {
     name: 'liquorLicenses',
     url:
-      'https://data.baltimorecity.gov/resource/g2jf-x8pp.geojson?$limit=50000&licenseyear=2017'
+      'https://data.baltimorecity.gov/resource/g2jf-x8pp.geojson?$limit=50000&licenseyear=2017',
+    attributes: {
+      'Trade Name': 'tradename',
+      'License End Date': 'licenseenddate',
+      'Licensee First Name': 'licenseefirstname',
+      'Licensee Last Name': 'licenseelastname'
+    }
   },
   {
     name: 'callsForService',
-    url: callsUrl
+    url: callsUrl,
+    attributes: {
+      Description: 'description',
+      Location: 'incidentlocation',
+      Priority: 'priority',
+      'Call Date': 'calldatetime',
+      'Call Number': 'callnumber'
+    }
   }
 ];

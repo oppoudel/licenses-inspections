@@ -14,8 +14,12 @@ class App extends Component {
       x: -76.6,
       y: 39.3
     },
-    liquorLicenses: [],
-    callsForService: [],
+    liquorLicenses: {
+      features: []
+    },
+    callsForService: {
+      features: []
+    },
     error: null,
     onXYupdate: this.onXYupdate
   };
@@ -25,7 +29,10 @@ class App extends Component {
         const response = await fetch(item.url);
         const data = await response.json();
         this.setState({
-          [item.name]: data.features.filter(item => item.geometry)
+          [item.name]: {
+            ...item,
+            features: data.features.filter(item => item.geometry)
+          }
         });
       } catch (error) {
         this.setState({ error });

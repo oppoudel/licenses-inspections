@@ -35,10 +35,10 @@ export default class Inspections extends Component {
     const polygon = buffer(point([x, y]), 0.1, {
       units: 'miles'
     });
-    const licensesInside = liquorLicenses.filter(feature =>
+    const licensesInside = liquorLicenses.features.filter(feature =>
       booleanPointInPolygon(feature, polygon)
     );
-    const callsInside = callsForService.filter(feature =>
+    const callsInside = callsForService.features.filter(feature =>
       booleanPointInPolygon(feature, polygon)
     );
     this.setState({
@@ -50,6 +50,7 @@ export default class Inspections extends Component {
 
   render() {
     const { callsInside, licensesInside, loading, activeIndex } = this.state;
+    const { liquorLicenses, callsForService } = this.props;
     return (
       !loading && (
         <Accordion fluid styled style={{ marginBottom: 20 }}>
@@ -66,10 +67,15 @@ export default class Inspections extends Component {
               {callsInside.map(({ properties }, i) => (
                 <Grid.Column key={i}>
                   <Segment>
-                    Description: {properties.description} <br />
-                    Location: {properties.incidentlocation} <br />
-                    Priority: {properties.priority} <br />
-                    Call Date: {getDate(properties.calldatetime)}
+                    {Object.entries(callsForService.attributes).map(
+                      ([key, value]) => (
+                        <div key={value}>
+                          {value.includes('date')
+                            ? `${key}: ${getDate(properties[value])}`
+                            : `${key}: ${properties[value]}`}
+                        </div>
+                      )
+                    )}
                   </Segment>
                 </Grid.Column>
               ))}
@@ -88,11 +94,15 @@ export default class Inspections extends Component {
               {licensesInside.map(({ properties }, i) => (
                 <Grid.Column key={i}>
                   <Segment>
-                    Trade Name: {properties.tradename} <br />
-                    License End Date: {getDate(properties.licenseenddate)}
-                    <br />
-                    Licenseee Name: {properties.licenseefirstname}{' '}
-                    {properties.licenseelastname}
+                    {Object.entries(liquorLicenses.attributes).map(
+                      ([key, value]) => (
+                        <div key={value}>
+                          {value.includes('date')
+                            ? `${key}: ${getDate(properties[value])}`
+                            : `${key}: ${properties[value]}`}
+                        </div>
+                      )
+                    )}
                   </Segment>
                 </Grid.Column>
               ))}
