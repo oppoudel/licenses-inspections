@@ -40,17 +40,22 @@ export default class EsriMap extends Component {
         } = this.props;
         if (webmap && view) {
           webmap.removeAll();
-          const point = {
-            type: 'point',
-            x,
-            y
-          };
           const marker = {
             type: 'simple-marker',
-            color: [0, 123, 255]
+            style: 'circle',
+            size: 12,
+            color: [51, 176, 255],
+            outline: {
+              color: [0, 0, 0],
+              width: 1
+            }
           };
           const pointGraphic = new Graphic({
-            geometry: point,
+            geometry: {
+              type: 'point',
+              x,
+              y
+            },
             symbol: marker
           });
           const layer = new GraphicsLayer({
@@ -64,12 +69,13 @@ export default class EsriMap extends Component {
   };
   createMap() {
     const {
-      center: { x, y }
+      center: { x, y },
+      updateXY
     } = this.props;
     loadModules(['esri/views/MapView', 'esri/Map']).then(
       ([MapView, Map, Graphic, GraphicsLayer], options) => {
         webmap = new Map({
-          basemap: 'topo-vector'
+          basemap: 'streets-navigation-vector'
         });
         view = new MapView({
           map: webmap,
@@ -79,7 +85,11 @@ export default class EsriMap extends Component {
         });
         // prevents panning with the mouse drag event
         view.on('drag', e => e.stopPropagation());
+
         view.when(() => this.addPoint());
+        view.on('click', e =>
+          updateXY(e.mapPoint.longitude, e.mapPoint.latitude)
+        );
       }
     );
   }

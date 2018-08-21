@@ -43,7 +43,7 @@ class App extends Component {
         <TopMenu />
         <Container style={{ marginTop: '5em' }}>
           <Geocoder updateXY={this.onXYupdate} />
-          <EsriMap center={mapCenter} />
+          <EsriMap center={mapCenter} updateXY={this.onXYupdate} />
           <Inspections
             center={mapCenter}
             liquorLicenses={liquorLicenses}
