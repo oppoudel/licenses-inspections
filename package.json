@@ -16,6 +16,7 @@
     "emotion": "^9.2.6",
     "esri-loader": "^2.4.0",
     "lodash.debounce": "^4.0.8",
+    "lodash.isempty": "^4.4.0",
     "match-sorter": "^2.2.3",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",

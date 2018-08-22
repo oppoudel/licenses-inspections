@@ -3,21 +3,20 @@ import { point } from '@turf/helpers';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import buffer from '@turf/buffer';
 import isEqual from 'react-fast-compare';
-import { Accordion, Icon, Grid, Segment } from 'semantic-ui-react';
-import { getDate } from '../utils';
+import isEmpty from 'lodash.isempty';
+import { Accordion } from 'semantic-ui-react';
+import Box from './Box';
 
 export default class Inspections extends Component {
   state = {
-    callsInside: [],
-    licensesInside: [],
     loading: true,
-    activeIndex: 0
+    activeIndex: 0,
+    layers: {}
   };
   handleClick = (e, titleProps) => {
     const { index } = titleProps;
     const { activeIndex } = this.state;
     const newIndex = activeIndex === index ? -1 : index;
-
     this.setState({ activeIndex: newIndex });
   };
   componentDidUpdate({ children: _, ...prevProps }) {
@@ -28,86 +27,53 @@ export default class Inspections extends Component {
   }
   findLocations = () => {
     const {
-      liquorLicenses,
-      callsForService,
+      layers,
       center: { x, y }
     } = this.props;
     const polygon = buffer(point([x, y]), 0.1, {
       units: 'miles'
     });
-    const licensesInside = liquorLicenses.features.filter(feature =>
-      booleanPointInPolygon(feature, polygon)
-    );
-    const callsInside = callsForService.features.filter(feature =>
-      booleanPointInPolygon(feature, polygon)
-    );
-    this.setState({
-      licensesInside: licensesInside,
-      callsInside: callsInside,
-      loading: false
-    });
+    if (!isEmpty(layers)) {
+      const layersList = Object.keys(layers);
+      layersList.map(layer =>
+        this.setState(prevState => ({
+          layers: {
+            ...prevState.layers,
+            [layer]: {
+              ...layers[layer],
+              features: layers[layer].features.filter(feature =>
+                booleanPointInPolygon(feature, polygon)
+              )
+            }
+          },
+          loading: false
+        }))
+      );
+    }
   };
 
   render() {
-    const { callsInside, licensesInside, loading, activeIndex } = this.state;
-    const { liquorLicenses, callsForService } = this.props;
+    const { loading, layers, activeIndex } = this.state;
+    const layersList = Object.keys(layers);
     return (
       !loading && (
         <Accordion fluid styled style={{ marginBottom: 20 }}>
-          <Accordion.Title
-            active={activeIndex === 0}
-            index={0}
-            onClick={this.handleClick}
-          >
-            <Icon name="dropdown" />
-            CAD Calls
-          </Accordion.Title>
-          <Accordion.Content active={activeIndex === 0}>
-            <Grid stackable columns={2}>
-              {callsInside.map(({ properties }, i) => (
-                <Grid.Column key={i}>
-                  <Segment>
-                    {Object.entries(callsForService.attributes).map(
-                      ([key, value]) => (
-                        <div key={value}>
-                          {value.includes('date')
-                            ? `${key}: ${getDate(properties[value])}`
-                            : `${key}: ${properties[value]}`}
-                        </div>
-                      )
-                    )}
-                  </Segment>
-                </Grid.Column>
-              ))}
-            </Grid>
-          </Accordion.Content>
-          <Accordion.Title
-            active={activeIndex === 1}
-            index={1}
-            onClick={this.handleClick}
-          >
-            <Icon name="dropdown" />
-            Liquor Licenses
-          </Accordion.Title>
-          <Accordion.Content active={activeIndex === 1}>
-            <Grid stackable columns={2}>
-              {licensesInside.map(({ properties }, i) => (
-                <Grid.Column key={i}>
-                  <Segment>
-                    {Object.entries(liquorLicenses.attributes).map(
-                      ([key, value]) => (
-                        <div key={value}>
-                          {value.includes('date')
-                            ? `${key}: ${getDate(properties[value])}`
-                            : `${key}: ${properties[value]}`}
-                        </div>
-                      )
-                    )}
-                  </Segment>
-                </Grid.Column>
-              ))}
-            </Grid>
-          </Accordion.Content>
+          {layersList.map((layer, i) => {
+            const title = layers[layer].title;
+            const featuresInside = layers[layer].features;
+            const attributes = layers[layer].attributes;
+            return (
+              <Box
+                key={layer}
+                title={title}
+                featuresInside={featuresInside}
+                attributes={attributes}
+                handleClick={this.handleClick}
+                index={i}
+                activeIndex={activeIndex}
+              />
+            );
+          })}
         </Accordion>
       )
     );

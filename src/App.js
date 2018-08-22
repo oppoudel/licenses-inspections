@@ -14,12 +14,7 @@ class App extends Component {
       x: -76.6,
       y: 39.3
     },
-    liquorLicenses: {
-      features: []
-    },
-    callsForService: {
-      features: []
-    },
+    layers: {},
     error: null,
     onXYupdate: this.onXYupdate
   };
@@ -28,12 +23,15 @@ class App extends Component {
       try {
         const response = await fetch(item.url);
         const data = await response.json();
-        this.setState({
-          [item.name]: {
-            ...item,
-            features: data.features.filter(item => item.geometry)
+        this.setState(prevState => ({
+          layers: {
+            ...prevState.layers,
+            [item.name]: {
+              ...item,
+              features: data.features.filter(item => item.geometry)
+            }
           }
-        });
+        }));
       } catch (error) {
         this.setState({ error });
       }
@@ -43,7 +41,7 @@ class App extends Component {
     this.setState({ mapCenter: { x, y } });
   };
   render() {
-    const { mapCenter, liquorLicenses, callsForService } = this.state;
+    const { mapCenter, layers } = this.state;
     return (
       <div>
         <LocationTracker updateXY={this.onXYupdate} />
@@ -51,11 +49,7 @@ class App extends Component {
         <Container style={{ marginTop: '5em' }}>
           <Geocoder updateXY={this.onXYupdate} />
           <EsriMap center={mapCenter} updateXY={this.onXYupdate} />
-          <Inspections
-            center={mapCenter}
-            liquorLicenses={liquorLicenses}
-            callsForService={callsForService}
-          />
+          <Inspections center={mapCenter} layers={layers} />
         </Container>
       </div>
     );
