@@ -1,6 +1,18 @@
 import React, { Fragment } from 'react';
 import { Accordion, Icon, Grid, Segment } from 'semantic-ui-react';
-import { getDate } from '../utils';
+import { format } from 'date-fns';
+
+const entity = (key, value, properties) => {
+  return (
+    <div key={value}>
+      {key.includes('Time')
+        ? `${key}: ${format(properties[value], 'MM/DD/YYYY HH:MM')}`
+        : key.includes('Date')
+          ? `${key}: ${format(properties[value], 'MM/DD/YYYY')}`
+          : `${key}: ${properties[value]}`}
+    </div>
+  );
+};
 
 export default ({
   index,
@@ -25,13 +37,9 @@ export default ({
           {featuresInside.map(({ properties }, i) => (
             <Grid.Column key={i}>
               <Segment>
-                {Object.entries(attributes).map(([key, value]) => (
-                  <div key={value}>
-                    {value.includes('date')
-                      ? `${key}: ${getDate(properties[value])}`
-                      : `${key}: ${properties[value]}`}
-                  </div>
-                ))}
+                {Object.entries(attributes).map(([key, value]) =>
+                  entity(key, value, properties)
+                )}
               </Segment>
             </Grid.Column>
           ))}

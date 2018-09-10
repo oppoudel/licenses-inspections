@@ -6,7 +6,7 @@ import Geocoder from './components/Geocoder/Geocoder';
 import TopMenu from './components/TopMenu';
 import LocationTracker from './components/LocationTracker';
 import EsriMap from './components/EsriMap';
-import Inspections from './components/Inspections';
+import Inspections from './components/Inspections/Inspections';
 
 class App extends Component {
   state = {
@@ -15,8 +15,7 @@ class App extends Component {
       y: 39.3
     },
     layers: {},
-    error: null,
-    onXYupdate: this.onXYupdate
+    error: null
   };
   componentDidMount() {
     geoQueries.forEach(async item => {
@@ -46,7 +45,7 @@ class App extends Component {
       <div>
         <LocationTracker updateXY={this.onXYupdate} />
         <TopMenu />
-        <Container style={{ marginTop: '5em' }}>
+        <Container style={{ marginTop: '6em' }}>
           <Geocoder updateXY={this.onXYupdate} />
           <EsriMap center={mapCenter} updateXY={this.onXYupdate} />
           <Inspections center={mapCenter} layers={layers} />

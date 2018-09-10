@@ -1,12 +1,12 @@
 const today = new Date();
-const newDate = new Date(today.setDate(today.getDate() - 7));
+const newDate = new Date(today.setDate(today.getDate() - 3));
 const trimDate = newDate
   .toISOString()
   .substr(0, newDate.toISOString().indexOf('.'));
 const urlExt =
   "&$where=calldatetime>'" + trimDate + "'&$order=calldatetime desc";
 const callsUrl = encodeURI(
-  'https://data.baltimorecity.gov/resource/m8g9-abgb.geojson?$limit=10000' +
+  'https://data.baltimorecity.gov/resource/m8g9-abgb.geojson?$limit=50000' +
     urlExt
 );
 export const geoQueries = [
@@ -30,7 +30,7 @@ export const geoQueries = [
       Description: 'description',
       Location: 'incidentlocation',
       Priority: 'priority',
-      'Call Date': 'calldatetime',
+      'Call Date Time': 'calldatetime',
       'Call Number': 'callnumber'
     }
   },
