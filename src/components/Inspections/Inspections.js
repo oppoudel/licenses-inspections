@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { point } from '@turf/helpers';
-import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import buffer from '@turf/buffer';
-import isEqual from 'react-fast-compare';
-import isEmpty from 'lodash.isempty';
-import { Accordion } from 'semantic-ui-react';
-import Box from './Box';
-import Liquor from './Liquor';
+import React, { Component } from "react";
+import { point } from "@turf/helpers";
+import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
+import buffer from "@turf/buffer";
+import isEqual from "react-fast-compare";
+import isEmpty from "lodash.isempty";
+import { Accordion } from "semantic-ui-react";
+import Box from "./Box";
+import Liquor from "./Liquor";
 
 export default class Inspections extends Component {
   state = {
@@ -31,8 +31,8 @@ export default class Inspections extends Component {
       layers,
       center: { x, y }
     } = this.props;
-    const polygon = buffer(point([x, y]), 500, {
-      units: 'feet'
+    const polygon = buffer(point([x, y]), 200, {
+      units: "feet"
     });
     if (!isEmpty(layers)) {
       const layersList = Object.keys(layers);
@@ -63,7 +63,7 @@ export default class Inspections extends Component {
             const title = layers[layer].title;
             const featuresInside = layers[layer].features;
             const attributes = layers[layer].attributes;
-            return layer !== 'liquorLicenses' ? (
+            return layer !== "liquorLicenses" ? (
               <Box
                 key={layer}
                 title={title}
